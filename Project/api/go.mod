@@ -1,6 +1,6 @@
 module github.com/extremeXdev/machine-L/Project/api
 
-go 1.19
+go 1.20
 
 require (
 	github.com/joho/godotenv v1.5.1
