@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	// chargement de variable global
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
@@ -30,8 +31,9 @@ func main() {
 			panic(err)
 		}
 	}()
-	coll := client.Database("sample_mflix").Collection("movies")
-	title := "Back to the Future"
+	// chargement de la base de données et de la collection ==> a changer en fonction du nom
+	coll := client.Database("Basede données").Collection("Nom de la collection")
+	title := "Example de titre"
 	var result bson.M
 	err = coll.FindOne(context.TODO(), bson.D{{"title", title}}).Decode(&result)
 	if err == mongo.ErrNoDocuments {
