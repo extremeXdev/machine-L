@@ -1,6 +1,69 @@
-{{define "title"}}A templated page{{end}}
+{{define "title"}}Elyndo website{{end}}
 
 {{define "body"}}
-<h1>Bienvenue sur le site web elyndo.net</h1>
-<h1>  il est en construction</h1>
+
+<!-- partial:index.partial.html -->
+<nav id="navbar">
+    <a href="#welcome-section">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  
+  <header id="welcome-section">
+    <h1>Bienvenue </h1>
+    <h1>Chez</h1>
+    <h1>ELYNDO.net</h1>
+  </header>
+  
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="projects-container">
+    <a href="." target="_blank"  class="project-tile">
+      <img src="https://www.florin-pop.com/images/100Days100PRojects/Day%20001.jpg" alt="Random Meal Generator">
+      <p>Dashboard</p>
+    </a>
+      
+    <a href="." target="_blank"  class="project-tile">
+      <img src="https://www.florin-pop.com/images/100Days100PRojects/Day%20013.jpg" alt="Password Generator">
+      <p>Project 2</p>
+    </a>
+      
+    <a href="." target="_blank"  class="project-tile">
+      <img src="https://www.florin-pop.com/images/100Days100PRojects/Day%20016.jpg" alt="Clock">
+      <p>Project 3</p>
+    </a>
+      
+    <a href="." target="_blank"  class="project-tile">
+      <img src="https://www.florin-pop.com/images/100Days100PRojects/Day%20018.jpg" alt="Typing Speed Test">
+      <p>Project 3</p>
+    </a>
+      
+    <a href="." target="_blank"  class="project-tile">
+      <img src="https://www.florin-pop.com/images/100Days100PRojects/Day%20031.jpg" alt="New Year Countdown">
+      <p>New Year Countdown</p>
+    </a>
+      
+    <a href="." target="_blank" class="project-tile">
+      <img src="https://www.florin-pop.com/images/100Days100PRojects/Day%20044.jpg" alt="Particles">
+      <p>Particles</p>
+    </a>
+    </div>
+  </section>
+  
+  <section id="contact" class="bg-blue">
+    <h2>Contact</h2>
+    <p></p>
+    <ul class="social-ul">
+      <li><a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a></li>
+      <li><a id="profile-link" href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a></li>
+      <li><a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a></li>   
+    </ul>
+  </section>
+  
+  <footer>
+    En developpement  <i class="fas fa-heart"> </i> 
+  </footer>
+
+
+
 {{end}}
