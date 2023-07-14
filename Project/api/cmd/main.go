@@ -4,8 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
+	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,6 +17,36 @@ import (
 )
 
 func main() {
+
+	//getdata()
+
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/", serveTemplate)
+	fmt.Println("Starting the server on :2501")
+	err := http.ListenAndServe(":2501", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func serveTemplate(w http.ResponseWriter, r *http.Request) {
+	//regex := regexp.MustCompile("favicon.ico")
+	fmt.Println(r.URL.Path)
+	fmt.Println("\n =========>\n")
+	lp := filepath.Join("templates", "layout.html")
+	var fp string
+	if r.URL.Path == "/" {
+		fp = filepath.Join("templates", filepath.Clean("/welcome.html"))
+	} else {
+		fp = filepath.Join("templates", filepath.Clean(r.URL.Path))
+	}
+	tmpl, _ := template.ParseFiles(lp, fp)
+	tmpl.ExecuteTemplate(w, "layout", nil)
+}
+
+func getdata() {
+
 	// chargement de variable global
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
@@ -32,7 +65,7 @@ func main() {
 		}
 	}()
 	// chargement de la base de données et de la collection ==> a changer en fonction du nom
-	coll := client.Database("Basede données").Collection("Nom de la collection")
+	coll := client.Database("Test").Collection("Nom de la collection")
 	title := "Example de titre"
 	var result bson.M
 	err = coll.FindOne(context.TODO(), bson.D{{"title", title}}).Decode(&result)
@@ -48,4 +81,5 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("%s\n", jsonData)
+
 }

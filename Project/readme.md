@@ -47,3 +47,7 @@ https://dev.to/hackmamba/build-a-rest-api-with-golang-and-mongodb-fiber-version-
 
 https://goswagger.io/generate/client.html
 
+> add dockerfile
+
+sudo docker build -t eylndoweb:v1 .
+sudo docker run -p 192.168.1.66:2502:2501 -it eylndoweb:v1
