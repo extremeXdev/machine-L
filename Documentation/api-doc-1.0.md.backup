@@ -2,10 +2,10 @@
 ## ----- Doc version 1.0 *beta* [*under-construction*]
 
 ### Machine-L -- what is ?
-Machine-L is a project to visualize statistics data. Basically for inquiry application, it tends to be applied on large data view matter. It aims to be simple, flexible and powerful.
+Machine-L is a project to visualize statistics data. Basically for inquiry application, it tend to be applied on large data view matter. It aims to be simple, flexible and powerful.
 
 ### Machine-L Rest API -- what is ?
-The Rest API (Application Programming Interface) as a purpose for being a Restful Service resolves the way to communicate and save stats data into database. To keep it simple, it uses a powerful No-SQL queries through MongoDB -- which means a system based on Json and Bson (mongo specific) format as exchange like any other document oriented data system do, and keeps a lightweight approach with a high security of tokens and others sensitive data.
+The Rest API (Application Programming Interface) as a purpose for being a Restful Service resolve the way to communicate and save stats data into database. To keep it simple, it uses a powerful No-SQL queries through MongoDB -- which means a system based on Json and Bson (mongo specific) format as exchange like any other document oriented data system like do, and keeps a lightweight approach with a high security of tokens and others sensitive data.
 
 It is quite simple to deal with, and integrate with any application process like Machine-L do!
 ___
@@ -40,20 +40,18 @@ method: post
 #### API response when successful(example):
 ```
 {
-  api_username:    "Joe-Biden",
-  status:          1,
-  rsp_code:        2472727,	      // the 7 digits generated confirmation code 
-  rsp_desc:        "User Signed Successful To Rest API, with status waiting for confirmation" 
+  status: 1,
+  rsp_code: 2472727,	// the 7 digits generated confirmation code 
+  rsp_desc:  "User Signed Successful To Rest API, with status waiting for confirmation" 
 }
 ```
 
 #### API response when unsuccessful (example):
 ```
 {
-  api_username:    "Joe-Biden",
-  status:          0,
-  rsp_code:        201       // code always < 1000 when code errors
-  rsp_desc:        "Failed to register the Rest API: username already taken !"
+  status: 0,
+  rsp_code: 201       // code always < 1000 when code errors
+  rsp_desc: "Failed to register the Rest API: username already taken !"
 }
 ```
 
@@ -89,7 +87,6 @@ method: post
 #### API response when successful(example):
 ```
 {
-  api_username: "Joe-Biden",
   status: 2,
   rsp_desc:  "User registered Successful To Rest API, with status definitive" 
 }
@@ -98,7 +95,6 @@ method: post
 #### API response when unsuccessful (example):
 ```
 {
-  api_username: "Joe-Biden",
   status: 6,
   rsp_desc: "The confirmation code sent is wrong!"
 }
@@ -109,7 +105,7 @@ method: post
 2. status 6 : confirmation code wrong
 3. status 7 : credentials don't match signed records
 
-when unsuccessful ( code > 5 )
+when unsuccessful code > 5
 
 
 
@@ -137,21 +133,21 @@ method: put, post
 #### API response when successful (example):
 ```
 {
-  token:      "mtk-lozjfidfmjyàehvsjguehyfudjdpzgfz",		// the main token as a response
-  rsp_code:   200,
-  rsp_desc:   "User Signed Successful To Rest API",
+  token:    "mtk-lozjfidfmjyàehvsjguehyfudjdpzgfz",		// the main token as a response
+  rsp_code: 200,
+  desc:     "User Signed Successful To Rest API",
 }
 ```
 
 #### API response when unsuccessful (example):
 ```
 {
-  rsp_code:   210,
-  rsp_desc:   "User signed unsuccessful To Rest API – check username",
+  rsp_code: 210,
+  desc:     "User signed unsuccessful To Rest API – check username",
 }
 ```
 
-when unsuccessful ( rsp_code != 200 )
+when unsuccessful rsp_code != 200 
 
 
 #### code recap

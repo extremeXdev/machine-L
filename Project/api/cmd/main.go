@@ -10,104 +10,137 @@ import (
 	"os"
 	"path/filepath"
 
+	"strconv"
+
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	
+
 	//"go.mongodb.org/mongo-driver/mongo/readpref"
-	
+
+	"github.com/gorilla/mux"
 	//...
-	
 )
+
+// ______
 
 func main() {
 
-	//getdata()
+	/*
+		//router.Schemes("https")
 
-	//  _____ step 1: loading template
+		r.Headers("Content-Type", "application/json")
+		//r.Headers("X-Requested-With", "XMLHttpRequest")
 
-	fs := http.FileServer(http.Dir("./static"))
+		// setting API exchange method
+		r.Methods("GET", "POST")
 
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/", serveTemplate)
+		//	API Home
+		//	/
+		r.HandleFunc("/", apiHome_handler)
+
+		//	Registering URI suffix match
+		//	/api/cmd/o-sign
+		r.HandleFunc("/api/cmd/o-sign", regist_handler)
+
+		//	Confirmation URI suffix match
+		//	/api/cmd/o-sign/conf
+		r.HandleFunc("/api/cmd/o-sign/conf", registConf_handler)
+	*/
+	//
+	//
+	//r := mux.NewRouter() // mux http router
+
+	/*
+	    r.HandleFunc("/", HomeHandler)
+	    r.HandleFunc("/products", ProductsHandler)
+	    r.HandleFunc("/articles", ArticlesHandler)
 
 
-	// _____ step 2: listen http socket
-	
-	fmt.Println("Starting the server on :2501")
+	   	r.HandleFunc("/products/{key}", ProductHandler)
+	   	r.HandleFunc("/articles/{category}/", ArticlesCategoryHandler)
+	   	r.HandleFunc("/articles/{category}/{id:[0-9]+}", ArticleHandler)
 
-	err := http.ListenAndServe(":2501", nil)
+	*/
+	/*
+		// Matches a dynamic subdomain.
+		r.Host("{subdomain:[a-z]+}.example.com")
+	*/
+
+	//http.Handle("/", r)
+
+	// -------   -------   -------
+
+	//  _____ step 1: API launch Socket
+
+	//:::: Socket by default Setting
+	api_socket := api_launch_port
+	//::::
+
+	//:::: Socket by Command line -- user can optionaly send port
+	if len(os.Args) >= 2 {
+		port := int(os.Args[1]) // -- argument 1 must be the port
+
+		if port > 100 {
+			api_socket = port
+			fmt.println(" API going to be launched on port: " +
+				string(api_socket))
+		} else {
+			fmt.println(" The port given through commande-line\n " +
+				"isn't accepted! -- default set to : " + string(api_socket))
+		}
+	}
+	//::::
+
+	//:::: Establishing The Rooter
+	router := NewAPIRouter()
+	//::::
+
+	// connect to database always before Listen And Serve
+
+	//:::: Connecting MongoDB
+	dbConnect_noSQL()
+	//::::
+
+	//:::: ???
+	getdata()
+	//::::
+
+	//
+	// _____ step 3: listen http socket
+
+	fmt.Println("Starting the server on :" + string(api_socket) + " ...")
+
+	err := http.ListenAndServe(":"+string(api_socket), router)
+
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		fmt.Println("Server Started on port %d, Successfully!", api_socket)
+	}
+
+}
+
+/// - - - - - - - - - - - - - - -  Functions  - - - - - - - - - - - - - - - \\\
+
+//_________
+
+/* call in main file or above
+check := func(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
 }
+*/
 
+// // Get Data Process  \\\\
+func getdata(db *mongo.Database) {
 
-//// Functions
+	// _____ step 1: loading document collection 'x' data as willing
 
-func serveTemplate(w http.ResponseWriter, r *http.Request) {
+	coll := db.Collection("collect_L")
 
-	//regex := regexp.MustCompile("favicon.ico")
-
-	fmt.Println(r.URL.Path)
-	fmt.Println("\n =========>\n")
-	lp := filepath.Join("templates", "layout.html")
-
-	var fp string
-
-	if r.URL.Path == "/" {
-		fp = filepath.Join("templates", filepath.Clean("/welcome.html"))   // let set as default welcome page
-	} else {
-		fp = filepath.Join("templates", filepath.Clean(r.URL.Path))		   // the uri is right oriented to do so
-	}
-
-	tmpl, _ := template.ParseFiles(lp, fp)
-	
-	tmpl.ExecuteTemplate(w, "layout", nil)
-}
-
-func getdata() {
-
-	// _____ step 0: Recovering Mongo DB URI
-
-	// loading global var
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env (environment) file found")
-	}
-
-	uri := os.Getenv("MONGODB_URI")
-	if uri == "" {
-		log.Fatal("Sorry! You must set your 'MONGODB_URI' environmental variable.\
-			\nSee \t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable")
-	}
-
-	// _____ step 1: Testing connection
-
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
-	if err != nil {
-		panic(err)
-	}
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
-
-	//_____ step 2: Recovering Database Name
-
-	db := os.Getenv("MACHINE_L_DB_NAME")
-	if db == "" {
-		log.Fatal("Sorry! You must set your Database's Name in a called 'MACHINE_L_DB_NAME' environmental variable.\
-		 					\nSee \t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable")						
-		return
-	}
-
-	// _____ step 3: loading collection 'x' data as willing
-
-	coll := client.Database(db).Collection("collect_L")
-	
 	title := "Example de titre"
 
 	var result bson.M
@@ -121,13 +154,13 @@ func getdata() {
 		panic(err)
 	}
 
-	// _____ step 4: json data loading start here
-	
+	// _____ step 2: json data loading start here
+
 	jsonData, err := json.MarshalIndent(result, "", "    ")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("%s\n", jsonData)  // display the json content
+	fmt.Printf("%s\n", jsonData) // display the json content
 
 }
